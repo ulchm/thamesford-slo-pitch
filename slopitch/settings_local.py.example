@@ -26,11 +26,9 @@ ALLOWED_HOSTS = [
 #     }
 # }
 
-# Static files (production) - REQUIRED for collectstatic
-STATIC_ROOT = '/var/www/slopitch/static/'
-
-# Media files (production)
-MEDIA_ROOT = '/var/www/slopitch/media/'
+# Static/Media files (uncomment if you need custom paths in production)
+# STATIC_ROOT = '/var/www/slopitch/staticfiles/'
+# MEDIA_ROOT = '/var/www/slopitch/media/'
 
 # Email settings (if needed)
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
