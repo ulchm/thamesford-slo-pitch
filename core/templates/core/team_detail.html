@@ -1,0 +1,436 @@
+{% extends 'base.html' %}
+{% load team_extras %}
+
+{% block title %}{{ team.name }} - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        {% team_logo team 60 %}
+                    </div>
+                    <div>
+                        <h1 class="gradient-text mb-0">{{ team.name }}</h1>
+                        {% if not team.is_active %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-pause-circle me-1"></i>Inactive Team
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{% url 'teams' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Teams
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if team.biography %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header  text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>About</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">{{ team.biography|safe }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Career Stats Summary -->
+    {% if career_stats.games_played > 0 %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-award me-2"></i>Team Stats
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-primary mb-0">{{ career_stats.games_played }}</h4>
+                                <small class="text-muted">Games</small>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-success mb-0">{{ career_stats.wins }}</h4>
+                                <small class="text-muted">Wins</small>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-danger mb-0">{{ career_stats.losses }}</h4>
+                                <small class="text-muted">Losses</small>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-warning mb-0">{{ career_stats.ties }}</h4>
+                                <small class="text-muted">Ties</small>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-info mb-0">{{ career_stats.points }}</h4>
+                                <small class="text-muted">Points</small>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <h4 class="text-secondary mb-0">{{ career_stats.percentage|floatformat:3 }}</h4>
+                                <small class="text-muted">PCT</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h5 class="text-success mb-0">{{ career_stats.runs_scored }}</h5>
+                                <small class="text-muted">Runs For</small>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="text-danger mb-0">{{ career_stats.runs_against }}</h5>
+                                <small class="text-muted">Runs Against</small>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="{% if career_stats.run_differential > 0 %}text-success{% elif career_stats.run_differential < 0 %}text-danger{% else %}text-muted{% endif %} mb-0">
+                                    {% if career_stats.run_differential > 0 %}+{% endif %}{{ career_stats.run_differential }}
+                                </h5>
+                                <small class="text-muted">Differential</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Win Percentage Chart -->
+    {% if win_percentage_data|length > 1 %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-graph-up me-2"></i>Win Percentage Trend
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="winPercentageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if players %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-badge me-2"></i>Players
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for player in players %}
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="d-flex align-items-center">
+                                        {% if player.number %}
+                                            <span class="badge bg-primary me-2">#{{ player.number }}</span>
+                                        {% endif %}
+                                        <span>
+                                            {{ player.user.first_name }} {{ player.user.last_name }}
+                                            {% if player.is_captain %}
+                                                <i class="bi bi-star-fill text-warning ms-1" title="Captain"></i>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Historical Stats by Season -->
+    {% if historical_stats %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-range me-2"></i>Season by Season
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="gradient-header">
+                                    <tr>
+                                        <th>Season</th>
+                                        <th>GP</th>
+                                        <th>W</th>
+                                        <th>L</th>
+                                        <th>T</th>
+                                        <th>Pts</th>
+                                        <th>PCT</th>
+                                        <th>RF</th>
+                                        <th>RA</th>
+                                        <th>Diff</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stats in historical_stats %}
+                                        <tr {% if stats.season == current_season %}class="table-primary"{% endif %}>
+                                            <td>
+                                                <strong>{{ stats.season.title }}</strong>
+                                                {% if stats.season == current_season %}
+                                                    <span class="badge bg-primary ms-1">Current</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ stats.games_played }}</td>
+                                            <td class="text-success">{{ stats.wins }}</td>
+                                            <td class="text-danger">{{ stats.losses }}</td>
+                                            <td class="text-warning">{{ stats.ties }}</td>
+                                            <td><strong>{{ stats.points }}</strong></td>
+                                            <td>{{ stats.percentage|floatformat:3 }}</td>
+                                            <td>{{ stats.runs_scored }}</td>
+                                            <td>{{ stats.runs_against }}</td>
+                                            <td>
+                                                {% with diff=stats.run_differential %}
+                                                    <span class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
+                                                        {% if diff > 0 %}+{% endif %}{{ diff }}
+                                                    </span>
+                                                {% endwith %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% if current_stats %}
+            <div class="col-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-header text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-trophy me-2"></i>{{ current_season.title }} Stats
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-success mb-0">{{ current_stats.wins }}</h3>
+                                    <small class="text-muted">Wins</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-danger mb-0">{{ current_stats.losses }}</h3>
+                                    <small class="text-muted">Losses</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-warning mb-0">{{ current_stats.ties }}</h3>
+                                <small class="text-muted">Ties</small>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row text-center small">
+                            <div class="col-6">
+                                <strong>Points:</strong> {{ current_stats.points }}<br>
+                                <strong>PCT:</strong> {{ current_stats.percentage|floatformat:3 }}
+                            </div>
+                            <div class="col-6">
+                                <strong>RF:</strong> {{ current_stats.runs_scored }}<br>
+                                <strong>RA:</strong> {{ current_stats.runs_against }}
+                            </div>
+                        </div>
+                        <div class="text-center mt-2">
+                            <span class="badge bg-secondary">
+                                Diff: 
+                                {% with diff=current_stats.run_differential %}
+                                    <span class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
+                                        {% if diff > 0 %}+{% endif %}{{ diff }}
+                                    </span>
+                                {% endwith %}
+                            </span>
+                            <span class="badge bg-info">
+                                Streak: {{ team.get_streak }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="col-12 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history me-2"></i>Game History by Season
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if games_by_season %}
+                        <div class="accordion accordion-flush" id="gameHistoryAccordion">
+                            {% for season, games in games_by_season.items %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading{{ season.id }}">
+                                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ season.id }}">
+                                            {{ season.title }} 
+                                            <span class="badge bg-secondary ms-2">{{ games|length }} games</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ season.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#gameHistoryAccordion">
+                                        <div class="accordion-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-hover mb-0">
+                                                    <thead class="gradient-header">
+                                                        <tr>
+                                                            <th>Date</th>
+                                                            <th>Opponent</th>
+                                                            <th>Score</th>
+                                                            <th>Result</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for game in games %}
+                                                            <tr>
+                                                                <td class="small">{{ game.starts_at|date:"M j, Y" }}</td>
+                                                                <td>
+                                                                    {% if game.home_team == team %}
+                                                                        <i class="bi bi-house-fill text-muted me-1"></i>
+                                                                        vs {{ game.away_team.name }}
+                                                                    {% else %}
+                                                                        <i class="bi bi-airplane text-muted me-1"></i>
+                                                                        @ {{ game.home_team.name }}
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if game.is_completed %}
+                                                                        <span class="badge bg-light text-dark">
+                                                                            {% if game.home_team == team %}
+                                                                                {{ game.home_score }}-{{ game.away_score }}
+                                                                            {% else %}
+                                                                                {{ game.away_score }}-{{ game.home_score }}
+                                                                            {% endif %}
+                                                                        </span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-secondary">TBD</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if game.is_completed %}
+                                                                        {% if game.winner == 'H' and game.home_team == team or game.winner == 'A' and game.away_team == team %}
+                                                                            <span class="badge bg-success">W</span>
+                                                                        {% elif game.winner == 'T' %}
+                                                                            <span class="badge bg-warning">T</span>
+                                                                        {% else %}
+                                                                            <span class="badge bg-danger">L</span>
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        <span class="text-muted">-</span>
+                                                                    {% endif %}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="p-3 text-center text-muted">
+                            No games found for this team.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if win_percentage_data|length > 1 %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('winPercentageChart').getContext('2d');
+    
+    const chartData = {{ win_percentage_json|safe }};
+    
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartData.map(d => d.season),
+            datasets: [{
+                label: 'Win Percentage',
+                data: chartData.map(d => d.percentage),
+                borderColor: 'rgb(0, 102, 204)',
+                backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'rgb(0, 102, 204)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        afterLabel: function(context) {
+                            const dataIndex = context.dataIndex;
+                            const games = chartData[dataIndex].games;
+                            return `Games: ${games}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+
+{% endblock %}

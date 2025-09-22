@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <h1 class="gradient-text display-3 fw-bold mb-3">Photo Gallery</h1>
+                <p class="lead text-muted">
+                    <i class="bi bi-camera-fill"></i> 
+                    Capturing the memories and moments of our slo-pitch community
+                </p>
+                <div class="mx-auto" style="width: 60px; height: 4px; background: var(--gradient-primary); border-radius: 2px;"></div>
+            </div>
+
+            {% if categories %}
+                <div class="row g-4" id="categoryGrid">
+                    {% for category in categories %}
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card h-100 gallery-category-card shadow-sm border-0" style="border-radius: var(--border-radius); overflow: hidden; transition: var(--transition-smooth);">
+                                {% with latest_photo=category.photos.first %}
+                                    <div class="position-relative overflow-hidden">
+                                        {% if latest_photo %}
+                                            <img src="{{ latest_photo.image.url }}" 
+                                                 class="card-img-top category-image" 
+                                                 alt="{{ category.name }}" 
+                                                 style="height: 250px; object-fit: cover; transition: var(--transition-smooth);"
+                                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'card-img-top bg-light d-flex align-items-center justify-content-center\' style=\'height: 250px;\'><div class=\'text-center text-muted\'><i class=\'bi bi-images display-4\'></i><p class=\'mt-2 mb-0\'>No Preview</p></div></div>';">
+                                        {% else %}
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                                <div class="text-center text-muted">
+                                                    <i class="bi bi-images display-4"></i>
+                                                    <p class="mt-2 mb-0">No Photos</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Hover Overlay -->
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center category-overlay" 
+                                             style="background: linear-gradient(135deg, rgba(0, 102, 204, 0.85) 0%, rgba(111, 66, 193, 0.85) 100%); opacity: 0; transition: var(--transition-smooth);">
+                                            <div class="text-center text-white">
+                                                <i class="bi bi-eye display-4 mb-2"></i>
+                                                <p class="mb-0 fw-bold">View Gallery</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Photo Count Badge -->
+                                        {% if category.photos.count > 0 %}
+                                            <div class="position-absolute top-3 end-3">
+                                                <span class="badge rounded-pill" style="background: var(--gradient-primary); box-shadow: var(--shadow-soft);">
+                                                    <i class="bi bi-camera"></i> {{ category.photos.count }}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endwith %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-primary-custom fw-bold mb-2">{{ category.name }}</h5>
+                                    <p class="text-muted mb-3 flex-grow-1">
+                                        <i class="bi bi-collection"></i> 
+                                        {{ category.photos.count }} photo{{ category.photos.count|pluralize }}
+                                    </p>
+                                    {% if category.last_updated %}
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar-check"></i> 
+                                            Updated {{ category.last_updated|date:"M d, Y" }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="card-footer border-0 bg-transparent pt-0">
+                                    <a href="{% url 'gallery_category' category.slug %}" 
+                                       class="btn btn-primary-custom w-100 fw-bold"
+                                       style="border-radius: var(--border-radius);">
+                                        <i class="bi bi-arrow-right-circle"></i> View Photos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Statistics Section -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm" style="background: var(--gradient-background); border-radius: var(--border-radius);">
+                            <div class="card-body text-center py-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="stat-item">
+                                            <i class="bi bi-folder-fill text-primary-custom display-4 mb-2"></i>
+                                            <h3 class="gradient-text fw-bold">{{ categories.count }}</h3>
+                                            <p class="text-muted mb-0">Photo Categories</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-item">
+                                            <i class="bi bi-image-fill text-primary-custom display-4 mb-2"></i>
+                                            <h3 class="gradient-text fw-bold">{{ total_photos }}</h3>
+                                            <p class="text-muted mb-0">Total Photos</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-item">
+                                            <i class="bi bi-clock-history text-primary-custom display-4 mb-2"></i>
+                                            <h3 class="gradient-text fw-bold">Years</h3>
+                                            <p class="text-muted mb-0">Of Memories</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-camera display-1 text-muted"></i>
+                    </div>
+                    <h3 class="text-muted mb-3">No Photo Categories Available</h3>
+                    <p class="lead text-muted mb-4">
+                        Our photo gallery is currently being set up. Check back later for league photos and highlights!
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-primary-custom">
+                        <i class="bi bi-house-fill"></i> Back to Home
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Gallery-specific enhancements */
+.gallery-category-card {
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}
+
+.gallery-category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-medium);
+}
+
+.gallery-category-card:hover .category-overlay {
+    opacity: 1 !important;
+}
+
+.category-overlay {
+    pointer-events: none;
+}
+
+.gallery-category-card:hover .category-image {
+    transform: scale(1.05);
+}
+
+.btn-primary-custom {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-primary-custom:hover {
+    background: var(--gradient-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    color: white;
+}
+
+/* Statistics styling */
+.stat-item {
+    padding: 1rem;
+    transition: var(--transition-smooth);
+}
+
+.stat-item:hover {
+    transform: translateY(-3px);
+}
+
+/* Loading animation for cards */
+@keyframes cardSlideIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.gallery-category-card {
+    animation: cardSlideIn 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-3 {
+        font-size: 2.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .stat-item {
+        margin-bottom: 2rem;
+    }
+}
+</style>
+
+<script>
+// Add progressive loading animation
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.gallery-category-card');
+    
+    // Stagger card animations
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+    
+    // Add intersection observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.stat-item').forEach(item => {
+        observer.observe(item);
+    });
+});
+</script>
+{% endblock %}

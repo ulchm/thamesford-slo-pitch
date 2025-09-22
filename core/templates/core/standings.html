@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Standings - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="gradient-text">Standings</h1>
+                
+                <!-- Season Filter -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {% if current_season %}{{ current_season.title }}{% else %}Select Season{% endif %}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for season in seasons %}
+                            <li><a class="dropdown-item" href="?season={{ season.id }}">{{ season.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if standings %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>GP</th>
+                                <th>W</th>
+                                <th>L</th>
+                                <th>T</th>
+                                <th>Pts</th>
+                                <th>PCT</th>
+                                <th>RF</th>
+                                <th>RA</th>
+                                <th>DIFF*</th>
+                                <th>Streak</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in standings %}
+                                <tr>
+                                    <td class="fw-bold">{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'team_detail' stat.team.id %}" class="text-decoration-none">
+                                            {{ stat.team.name }}
+                                        </a>
+                                        {% if stat.tie_breaker_symbol %}
+                                            <sup class="text-primary fw-bold">{{ stat.tie_breaker_symbol }}</sup>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ stat.games_played }}</td>
+                                    <td>{{ stat.wins }}</td>
+                                    <td>{{ stat.losses }}</td>
+                                    <td>{{ stat.ties }}</td>
+                                    <td class="fw-bold">{{ stat.points }}</td>
+                                    <td>{{ stat.percentage|floatformat:3 }}</td>
+                                    <td>{{ stat.runs_scored }}</td>
+                                    <td>{{ stat.runs_against }}</td>
+                                    <td>
+                                        {% with diff=stat.run_differential_capped %}
+                                            <span class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
+                                                {% if diff > 0 %}+{% endif %}{{ diff }}
+                                            </span>
+                                        {% endwith %}
+                                    </td>
+                                    <td>{{ stat.team.get_streak }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if tie_explanations %}
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-primary mb-2">Tie-Breaking Explanations:</h6>
+                        <ul class="list-unstyled mb-0">
+                            {% for symbol, reason in tie_explanations.items %}
+                                <li class="mb-1">
+                                    <sup class="text-primary fw-bold">{{ symbol }}</sup>
+                                    <small>{{ reason }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <small class="text-muted">
+                        <strong>GP:</strong> Games Played |
+                        <strong>W:</strong> Wins |
+                        <strong>L:</strong> Losses |
+                        <strong>T:</strong> Ties |
+                        <strong>Pts:</strong> Points (2 for win, 1 for tie) |
+                        <strong>PCT:</strong> Winning Percentage |
+                        <strong>RF:</strong> Runs For |
+                        <strong>RA:</strong> Runs Against |
+                        <strong>DIFF*:</strong> Run Differential (±7 max per game per SPO rules)
+                    </small>
+                    <br>
+                    <small class="text-muted">
+                        <em>Tie-breaking follows Slo-Pitch Ontario rules: Head-to-head → Run differential → Fewest runs against → Most runs scored</em>
+                    </small>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <h3 class="text-muted">No standings available</h3>
+                    <p>Please select a season or check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

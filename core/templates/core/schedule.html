@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="gradient-text">Game Schedule</h1>
+                
+                <!-- Season Filter -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {% if current_season %}{{ current_season.title }}{% else %}Select Season{% endif %}
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for season in seasons %}
+                            <li><a class="dropdown-item" href="?season={{ season.id }}">{{ season.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if games %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="gradient-header">
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Away Team</th>
+                                <th class="text-center">Score</th>
+                                <th>Home Team</th>
+                                <th>Location</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in games %}
+                                <tr class="{% if game.is_completed %}completed-game{% else %}upcoming-game{% endif %}">
+                                    <td class="fw-medium">{{ game.starts_at|date:"M j, Y" }}</td>
+                                    <td>{{ game.starts_at|date:"g:i A" }}</td>
+                                    <td>
+                                        <a href="{% url 'team_detail' game.away_team.id %}" class="text-decoration-none {% if game.winner == 'A' %}text-success fw-bold{% endif %}">
+                                            {{ game.away_team.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if game.is_completed %}
+                                            <span class="score-display">
+                                                <span class="{% if game.winner == 'A' %}text-success fw-bold{% endif %}">{{ game.away_score }}</span>
+                                                <span class="text-muted mx-1">-</span>
+                                                <span class="{% if game.winner == 'H' %}text-success fw-bold{% endif %}">{{ game.home_score }}</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">vs</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'team_detail' game.home_team.id %}" class="text-decoration-none {% if game.winner == 'H' %}text-success fw-bold{% endif %}">
+                                            {{ game.home_team.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-muted">{{ game.location.name }}</td>
+                                    <td class="text-center">
+                                        {% if game.is_completed %}
+                                            {% if game.winner == 'T' %}
+                                                <span class="badge bg-warning text-dark">TIE</span>
+                                            {% else %}
+                                                <span class="badge bg-success">FINAL</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if game.cancellation %}
+                                                <span class="badge bg-danger">{{ game.get_cancellation_display }}</span>
+                                            {% else %}
+                                                <span class="badge bg-primary">SCHEDULED</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <h3 class="text-muted">No games scheduled</h3>
+                    <p>Please select a season or check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

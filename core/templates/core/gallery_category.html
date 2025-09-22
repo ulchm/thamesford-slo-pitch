@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - Gallery - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb bg-transparent p-0">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'gallery' %}" class="breadcrumb-link text-decoration-none" style="color: var(--primary-blue);">
+                            <i class="bi bi-images"></i> Gallery
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-secondary" aria-current="page">
+                        {{ category.name }}
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Category Header -->
+            <div class="text-center mb-5">
+                <h1 class="gradient-text display-4 fw-bold mb-3">{{ category.name }}</h1>
+                <p class="lead text-muted">
+                    <i class="bi bi-camera"></i> 
+                    {{ photos.count }} photo{{ photos.count|pluralize }}
+                    {% if category.last_updated %}
+                        <span class="ms-2">
+                            <i class="bi bi-clock"></i> 
+                            Last updated {{ category.last_updated|date:"M d, Y" }}
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if photos %}
+                <!-- Photo Grid -->
+                <div class="row g-4" id="photoGrid">
+                    {% for photo in photos %}
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="card h-100 shadow-sm border-0 photo-card" style="transition: var(--transition-smooth);">
+                                <div class="position-relative overflow-hidden photo-clickable" 
+                                     style="border-radius: var(--border-radius) var(--border-radius) 0 0; cursor: pointer;"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#photoModal"
+                                     data-photo-url="{{ photo.image.url }}"
+                                     data-photo-title="{{ photo.title }}"
+                                     data-photo-description="{{ photo.description }}">
+                                    {% if photo.image %}
+                                        <img src="{{ photo.image.url }}" 
+                                             class="card-img-top photo-thumbnail" 
+                                             alt="{{ photo.title }}" 
+                                             style="height: 250px; object-fit: cover; transition: var(--transition-smooth);"
+                                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'card-img-top bg-light d-flex align-items-center justify-content-center\' style=\'height: 250px;\'><div class=\'text-center text-muted\'><i class=\'bi bi-image display-4\'></i><p class=\'mt-2 mb-0\'>Image Unavailable</p></div></div>';">
+                                    {% else %}
+                                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                            <div class="text-center text-muted">
+                                                <i class="bi bi-image display-4"></i>
+                                                <p class="mt-2 mb-0">No Image</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Hover Overlay -->
+                                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center photo-overlay" 
+                                         style="background: rgba(0, 102, 204, 0.8); opacity: 0; transition: var(--transition-smooth); pointer-events: none;">
+                                        <i class="bi bi-zoom-in text-white" style="font-size: 2rem;"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-primary-custom fw-bold">{{ photo.title }}</h5>
+                                    {% if photo.description %}
+                                        <p class="card-text text-muted flex-grow-1">{{ photo.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    <small class="text-muted mt-auto">
+                                        <i class="bi bi-calendar"></i> 
+                                        {{ photo.uploaded_at|date:"M d, Y" }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Load More Button (for future pagination) -->
+                <div class="text-center mt-5">
+                    <a href="{% url 'gallery' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-arrow-left"></i> Back to Gallery
+                    </a>
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-camera display-1 text-muted"></i>
+                    </div>
+                    <h3 class="text-muted mb-3">No Photos in This Category</h3>
+                    <p class="lead text-muted mb-4">
+                        This category doesn't have any photos yet. Check back later for updates!
+                    </p>
+                    <a href="{% url 'gallery' %}" class="btn btn-primary-custom">
+                        <i class="bi bi-arrow-left"></i> Back to Gallery
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Photo Modal for Full-Size Viewing -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true" data-bs-backdrop="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 bg-white" style="border-radius: var(--border-radius); position: relative; z-index: 1061;">
+            <div class="modal-header border-0 pb-0 bg-white" style="border-radius: var(--border-radius) var(--border-radius) 0 0;">
+                <h5 class="modal-title gradient-text fw-bold" id="photoModalLabel">Photo Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: relative; z-index: 1065; background: none; border: none; opacity: 1; font-size: 1.5rem;"></button>
+            </div>
+            <div class="modal-body text-center bg-white" style="border-radius: 0 0 var(--border-radius) var(--border-radius);">
+                <img src="" alt="" class="img-fluid" id="modalImage" style="max-height: 70vh; border-radius: var(--border-radius); position: relative; z-index: 1062;">
+                <p class="mt-3 text-muted" id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Gallery-specific styles */
+.photo-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}
+
+.photo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.photo-card:hover .photo-overlay {
+    opacity: 1 !important;
+}
+
+.photo-thumbnail {
+    transition: var(--transition-smooth);
+}
+
+.photo-card:hover .photo-thumbnail {
+    transform: scale(1.05);
+}
+
+.photo-clickable:hover .photo-overlay {
+    opacity: 1 !important;
+}
+
+.photo-clickable:hover .photo-thumbnail {
+    transform: scale(1.05);
+}
+
+/* Breadcrumb styling fixes */
+.breadcrumb-link {
+    color: var(--primary-blue) !important;
+    transition: var(--transition-smooth);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: transparent !important;
+}
+
+.breadcrumb-link:hover {
+    color: var(--dark-blue) !important;
+    background: rgba(0, 102, 204, 0.1) !important;
+}
+
+.breadcrumb-item {
+    background: transparent !important;
+}
+
+.breadcrumb-item::before {
+    color: #6c757d;
+}
+
+/* Modal close button fixes */
+.btn-close {
+    position: relative !important;
+    z-index: 1065 !important;
+    background: none !important;
+    border: none !important;
+    opacity: 1 !important;
+    font-size: 1.5rem !important;
+    color: #000 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.btn-close:hover {
+    opacity: 0.75 !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 4px;
+}
+
+.btn-close:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25) !important;
+    opacity: 1 !important;
+}
+
+/* Ensure modal header has proper stacking */
+.modal-header {
+    position: relative;
+    z-index: 1063 !important;
+}
+
+/* Custom button styling */
+.btn-primary-custom {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-primary-custom:hover {
+    background: var(--gradient-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    color: white;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition-smooth);
+}
+
+.btn-outline-primary:hover {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Modal enhancements */
+.modal-content {
+    box-shadow: var(--shadow-strong);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1060;
+}
+
+.modal-backdrop {
+    z-index: 1055;
+}
+
+.modal {
+    z-index: 1056;
+}
+
+.modal-dialog {
+    z-index: 1060;
+}
+
+/* Ensure modal content is always visible */
+#photoModal .modal-content {
+    background-color: white !important;
+    opacity: 1 !important;
+}
+
+#photoModal .modal-body {
+    background-color: white !important;
+}
+
+#photoModal .modal-header {
+    background-color: white !important;
+}
+
+/* Fix any potential overlay issues */
+.modal.show {
+    display: block !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Loading animation */
+@keyframes photoLoad {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.photo-card {
+    animation: photoLoad 0.5s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .photo-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+// JavaScript for photo modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const photoModal = document.getElementById('photoModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('photoModalLabel');
+    const modalDescription = document.getElementById('modalDescription');
+    
+    // Handle photo clicks
+    document.querySelectorAll('.photo-clickable').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Photo clicked!'); // Debug log
+            
+            const photoUrl = this.getAttribute('data-photo-url');
+            const photoTitle = this.getAttribute('data-photo-title');
+            const photoDescription = this.getAttribute('data-photo-description');
+            
+            console.log('Photo URL:', photoUrl); // Debug log
+            console.log('Modal elements:', modalImage, modalTitle, modalDescription); // Debug
+            
+            if (modalImage && modalTitle && modalDescription) {
+                modalImage.src = photoUrl;
+                modalImage.alt = photoTitle;
+                modalTitle.textContent = photoTitle;
+                modalDescription.textContent = photoDescription || 'No description available.';
+                
+                // Show modal
+                if (typeof bootstrap !== 'undefined') {
+                    // Ensure any existing modal instances are disposed
+                    const existingModal = bootstrap.Modal.getInstance(photoModal);
+                    if (existingModal) {
+                        existingModal.dispose();
+                    }
+                    
+                    // Create and show new modal instance
+                    const modal = new bootstrap.Modal(photoModal, {
+                        backdrop: true,
+                        keyboard: true,
+                        focus: true
+                    });
+                    modal.show();
+                } else {
+                    console.error('Bootstrap not loaded');
+                }
+            } else {
+                console.error('Modal elements not found');
+            }
+        });
+    });
+    
+    // Ensure close button works
+    const closeButton = document.querySelector('#photoModal .btn-close');
+    if (closeButton) {
+        closeButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modalInstance = bootstrap.Modal.getInstance(photoModal);
+            if (modalInstance) {
+                modalInstance.hide();
+            } else {
+                // Fallback close method
+                photoModal.style.display = 'none';
+                photoModal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        });
+    }
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (photoModal && photoModal.classList.contains('show')) {
+            if (e.key === 'Escape') {
+                const modalInstance = bootstrap.Modal.getInstance(photoModal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            }
+        }
+    });
+    
+    // Add staggered animation for photo cards
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.photo-card').forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}The Latest - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if upcoming_games %}
+        <div class="upcoming-games mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="gradient-text mb-0">
+                    <i class="bi bi-calendar-event me-2"></i>Upcoming Games
+                </h2>
+                <a href="{% url 'schedule' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-arrow-right me-1"></i>View Schedule
+                </a>
+            </div>
+            <div class="table-responsive fade-in">
+                <table class="table table-sm table-hover">
+                    <thead class="gradient-header">
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Away Team</th>
+                            <th>Home Team</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in upcoming_games %}
+                            <tr class="upcoming-game">
+                                <td class="fw-medium">{{ game.starts_at|date:"M j" }}</td>
+                                <td>{{ game.starts_at|date:"g:i A" }}</td>
+                                <td>
+                                    <a href="{% url 'team_detail' game.away_team.id %}" class="text-decoration-none">
+                                        {{ game.away_team.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'team_detail' game.home_team.id %}" class="text-decoration-none">
+                                        {{ game.home_team.name }}
+                                    </a>
+                                </td>
+                                <td class="text-muted">{{ game.location.name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if latest_scores %}
+        <div class="latest-scores mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="gradient-text mb-0">
+                    <i class="bi bi-trophy-fill me-2"></i>Latest Scores
+                </h2>
+                <a href="{% url 'standings' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-arrow-right me-1"></i>View Standings
+                </a>
+            </div>
+            <div class="table-responsive fade-in">
+                <table class="table table-sm table-hover">
+                    <thead class="gradient-header">
+                        <tr>
+                            <th>Date</th>
+                            <th>Away Team</th>
+                            <th class="text-center">Score</th>
+                            <th>Home Team</th>
+                            <th>Location</th>
+                            <th class="text-center">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in latest_scores %}
+                            <tr class="completed-game">
+                                <td class="fw-medium">{{ game.starts_at|date:"M j" }}</td>
+                                <td>
+                                    <a href="{% url 'team_detail' game.away_team.id %}" class="text-decoration-none {% if game.winner == 'A' %}text-success fw-bold{% endif %}">
+                                        {{ game.away_team.name }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <span class="score-display">
+                                        <span class="{% if game.winner == 'A' %}text-success fw-bold{% endif %}">{{ game.away_score }}</span>
+                                        <span class="text-muted mx-1">-</span>
+                                        <span class="{% if game.winner == 'H' %}text-success fw-bold{% endif %}">{{ game.home_score }}</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'team_detail' game.home_team.id %}" class="text-decoration-none {% if game.winner == 'H' %}text-success fw-bold{% endif %}">
+                                        {{ game.home_team.name }}
+                                    </a>
+                                </td>
+                                <td class="text-muted">{{ game.location.name }}</td>
+                                <td class="text-center">
+                                    {% if game.winner == 'T' %}
+                                        <span class="badge bg-warning text-dark">TIE</span>
+                                    {% else %}
+                                        <span class="badge bg-success">FINAL</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if recent_news %}
+        <div class="recent-news">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="gradient-text mb-0">
+                    <i class="bi bi-newspaper me-2"></i>Latest News
+                </h2>
+                <a href="{% url 'news' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-arrow-right me-1"></i>View All News
+                </a>
+            </div>
+
+            <div class="row">
+                {% for article in recent_news %}
+                    <div class="col-12 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-header text-white" style="background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-newspaper me-2"></i>{{ article.subject }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted mb-3">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    {{ article.posted_on|date:"F j, Y" }}
+                                    <span class="mx-2">•</span>
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ article.posted_on|date:"g:i A" }}
+                                </p>
+                                <div class="card-text">
+                                    {{ article.body|safe }}
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <a href="{% url 'news' %}" class="btn btn-sm btn-outline-primary">
+                                    Read More <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

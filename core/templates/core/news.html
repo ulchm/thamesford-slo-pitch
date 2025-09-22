@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}News - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="gradient-text mb-4">League News</h1>
+
+            {% if news_list %}
+                {% for news_item in news_list %}
+                    <article class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ news_item.subject }}</h2>
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-calendar-alt"></i> {{ news_item.posted_on|date:"F d, Y g:i A" }}
+                            </p>
+                            <div class="card-text">
+                                {{ news_item.body|safe }}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <h3 class="text-muted">No news available</h3>
+                    <p>Check back later for league updates and announcements.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

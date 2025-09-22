@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="gradient-text mb-4">Contact Us</h1>
+            
+            <!-- League Officials -->
+            <div class="card mb-4 fade-in">
+                <div class="card-header text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-people-fill me-2"></i>League Officials
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-5"><strong>League President:</strong></div>
+                        <div class="col-sm-7">
+                            Matt Young<br>
+                            <span class="phone-reveal" data-phone="2269269016" data-display="(226) 926-9016">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:2269269016" class="text-decoration-none phone-link" style="display: none;">(226) 926-9016</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-5"><strong>League Vice President:</strong></div>
+                        <div class="col-sm-7">
+                            Rick Ackert<br>
+                            <span class="phone-reveal" data-phone="2269195211" data-display="(226) 919-5211">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:2269195211" class="text-decoration-none phone-link" style="display: none;">(226) 919-5211</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-5"><strong>League Treasurer:</strong></div>
+                        <div class="col-sm-7">
+                            Matt Young<br>
+                            <span class="phone-reveal" data-phone="5192269269016" data-display="(519) 226-926-9016">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:5192269269016" class="text-decoration-none phone-link" style="display: none;">(519) 226-926-9016</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-5"><strong>Scheduling & Website:</strong></div>
+                        <div class="col-sm-7">
+                            Bill Hilton<br>
+                            <span class="phone-reveal" data-phone="5197882627" data-display="(519) 788-2627">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:5197882627" class="text-decoration-none phone-link" style="display: none;">(519) 788-2627</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-5"><strong>Umpires:</strong></div>
+                        <div class="col-sm-7">
+                            Jody Sutherland<br>
+                            <span class="phone-reveal" data-phone="5194251558" data-display="(519) 425-1558">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:5194251558" class="text-decoration-none phone-link" style="display: none;">(519) 425-1558</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-0">
+                        <div class="col-sm-5"><strong>Diamond Crew:</strong></div>
+                        <div class="col-sm-7">
+                            Ryan Marshall<br>
+                            <span class="phone-reveal" data-phone="5192816654" data-display="(519) 281-6654">
+                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                </button>
+                                <a href="tel:5192816654" class="text-decoration-none phone-link" style="display: none;">(519) 281-6654</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Contacts -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header text-white d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">
+                                <i class="bi bi-telephone-fill me-2"></i>Team Contacts
+                            </h3>
+                            <button class="btn btn-sm btn-light" id="showAllPhones">
+                                <i class="bi bi-eye me-1"></i>Show All Phones
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Red Eyed Riders</h6>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Tim Lewis</span>
+                                            <span class="phone-reveal" data-phone="5194214948" data-display="(519) 421-4948">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5194214948" class="text-decoration-none phone-link" style="display: none;">(519) 421-4948</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Bulldogs</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Rob Appleton</span>
+                                            <span class="phone-reveal" data-phone="5194945856" data-display="(519) 494-5856">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5194945856" class="text-decoration-none phone-link" style="display: none;">(519) 494-5856</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Ryan Daly</span>
+                                            <span class="phone-reveal" data-phone="5194038111" data-display="(519) 403-8111">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5194038111" class="text-decoration-none phone-link" style="display: none;">(519) 403-8111</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Dewy's Auto</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Matthew Young</span>
+                                            <span class="phone-reveal" data-phone="2269269016" data-display="(226) 926-9016">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:2269269016" class="text-decoration-none phone-link" style="display: none;">(226) 926-9016</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Jake Elliott</span>
+                                            <span class="phone-reveal" data-phone="5195332114" data-display="(519) 533-2114">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5195332114" class="text-decoration-none phone-link" style="display: none;">(519) 533-2114</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Damaged Goods</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Rick Ackert</span>
+                                            <span class="phone-reveal" data-phone="2269195211" data-display="(226) 919-5211">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:2269195211" class="text-decoration-none phone-link" style="display: none;">(226) 919-5211</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Bill Hilton</span>
+                                            <span class="phone-reveal" data-phone="5197882627" data-display="(519) 788-2627">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5197882627" class="text-decoration-none phone-link" style="display: none;">(519) 788-2627</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Designated Drinkers</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Rob Wilson</span>
+                                            <span class="phone-reveal" data-phone="5192007629" data-display="(519) 200-7629">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5192007629" class="text-decoration-none phone-link" style="display: none;">(519) 200-7629</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Ian Allison</span>
+                                            <span class="phone-reveal" data-phone="5198601465" data-display="(519) 860-1465">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5198601465" class="text-decoration-none phone-link" style="display: none;">(519) 860-1465</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">One Hitters</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Adam Young</span>
+                                            <span class="phone-reveal" data-phone="5198681488" data-display="(519) 868-1488">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5198681488" class="text-decoration-none phone-link" style="display: none;">(519) 868-1488</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Matt Therkildson</span>
+                                            <span class="phone-reveal" data-phone="5196300686" data-display="(519) 630-0686">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5196300686" class="text-decoration-none phone-link" style="display: none;">(519) 630-0686</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">NADS</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Spencer Radford</span>
+                                            <span class="phone-reveal" data-phone="2262283020" data-display="(226) 228-3020">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:2262283020" class="text-decoration-none phone-link" style="display: none;">(226) 228-3020</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Ryan Lepsic</span>
+                                            <span class="text-muted small">No phone listed</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Silver Bullets</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Jim DosSantos</span>
+                                            <span class="phone-reveal" data-phone="5196154152" data-display="(519) 615-4152">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5196154152" class="text-decoration-none phone-link" style="display: none;">(519) 615-4152</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Justin Edwards</span>
+                                            <span class="phone-reveal" data-phone="5198595002" data-display="(519) 859-5002">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5198595002" class="text-decoration-none phone-link" style="display: none;">(519) 859-5002</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="gradient-text">Scared Hitless</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Matt Malecki</span>
+                                            <span class="phone-reveal" data-phone="5196080076" data-display="(519) 608-0076">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5196080076" class="text-decoration-none phone-link" style="display: none;">(519) 608-0076</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Ryan Rego</span>
+                                            <span class="phone-reveal" data-phone="5196084925" data-display="(519) 608-4925">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5196084925" class="text-decoration-none phone-link" style="display: none;">(519) 608-4925</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-0">
+                                        <h6 class="gradient-text">Outcasts</h6>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Ryan Granger</span>
+                                            <span class="phone-reveal" data-phone="5198543401" data-display="(519) 854-3401">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:5198543401" class="text-decoration-none phone-link" style="display: none;">(519) 854-3401</a>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Jesse Carew</span>
+                                            <span class="phone-reveal" data-phone="2269806622" data-display="(226) 980-6622">
+                                                <button class="btn btn-sm btn-outline-primary phone-button">
+                                                    <i class="bi bi-telephone me-1"></i>Show Phone
+                                                </button>
+                                                <a href="tel:2269806622" class="text-decoration-none phone-link" style="display: none;">(226) 980-6622</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.phone-button {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    transition: var(--transition-smooth);
+}
+
+.phone-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 102, 204, 0.2);
+}
+
+.phone-link {
+    font-weight: 500;
+    color: var(--primary-blue);
+    transition: var(--transition-smooth);
+}
+
+.phone-link:hover {
+    color: var(--dark-blue);
+    text-decoration: underline !important;
+}
+
+.phone-reveal {
+    display: inline-block;
+    margin-left: 0.25rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle individual phone reveals
+    document.querySelectorAll('.phone-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const phoneReveal = this.closest('.phone-reveal');
+            const phoneLink = phoneReveal.querySelector('.phone-link');
+            
+            // Hide button and show phone link
+            this.style.display = 'none';
+            phoneLink.style.display = 'inline';
+            
+            // Add a subtle animation
+            phoneLink.style.opacity = '0';
+            phoneLink.style.transform = 'translateX(-10px)';
+            
+            setTimeout(() => {
+                phoneLink.style.transition = 'all 0.3s ease';
+                phoneLink.style.opacity = '1';
+                phoneLink.style.transform = 'translateX(0)';
+            }, 10);
+        });
+    });
+    
+    // Handle "Show All Phones" button
+    document.getElementById('showAllPhones').addEventListener('click', function() {
+        const allPhoneButtons = document.querySelectorAll('.phone-button');
+        const allPhoneLinks = document.querySelectorAll('.phone-link');
+        
+        // Hide all buttons and show all phone links
+        allPhoneButtons.forEach(button => {
+            button.style.display = 'none';
+        });
+        
+        allPhoneLinks.forEach((link, index) => {
+            setTimeout(() => {
+                link.style.display = 'inline';
+                link.style.opacity = '0';
+                link.style.transform = 'translateX(-10px)';
+                
+                setTimeout(() => {
+                    link.style.transition = 'all 0.3s ease';
+                    link.style.opacity = '1';
+                    link.style.transform = 'translateX(0)';
+                }, 10);
+            }, index * 50); // Stagger the animations
+        });
+        
+        // Update button text and disable it
+        this.innerHTML = '<i class="bi bi-check-circle me-1"></i>All Phones Shown';
+        this.disabled = true;
+        this.classList.remove('btn-light');
+        this.classList.add('btn-success');
+    });
+});
+</script>
+{% endblock %}

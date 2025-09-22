@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load team_extras %}
+
+{% block title %}Teams - Thamesford Slo-Pitch League{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="gradient-text mb-0">Team Rosters</h1>
+                <span id="team-count" class="badge bg-secondary">{{ teams|length }} teams</span>
+            </div>
+
+            <!-- Search and Filter Controls -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" id="team-search" class="form-control" placeholder="Search teams by name...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="active-only" checked>
+                        <label class="form-check-label" for="active-only">
+                            Show active teams only
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {% if teams %}
+                <div class="row fade-in" id="teams-container">
+                    {% for team in teams %}
+                        <div class="col-lg-6 col-xl-4 mb-4 team-card" 
+                             data-team-name="{{ team.name|lower }}" 
+                             data-active="{{ team.is_active|yesno:'true,false' }}">
+                            <div class="card h-100 {% if not team.is_active %}opacity-75{% endif %}">
+                                <div class="card-header  text-white d-flex align-items-center">
+                                    <div class="me-3">
+                                        {% team_logo team 40 %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-0">{{ team.name }}</h5>
+                                        {% if not team.is_active %}
+                                            <small class="text-light"><i class="bi bi-pause-circle me-1"></i>Inactive</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {% if team.biography %}
+                                        <p class="card-text">{{ team.biography|truncatewords:20|safe }}</p>
+                                    {% endif %}
+                                    
+                                    {% with stats=team.current_season_stats %}
+                                        {% if stats %}
+                                            <div class="row text-center mb-3">
+                                                <div class="col-4">
+                                                    <div class="fw-bold">{{ stats.wins }}</div>
+                                                    <small class="text-muted">Wins</small>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="fw-bold">{{ stats.losses }}</div>
+                                                    <small class="text-muted">Losses</small>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="fw-bold">{{ stats.ties }}</div>
+                                                    <small class="text-muted">Ties</small>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                    
+                                    <div class="text-center">
+                                        <span class="badge bg-secondary">{{ team.players.count }} Players</span>
+                                        <span class="badge bg-info">{{ team.get_streak }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'team_detail' team.id %}" class="btn btn-primary-custom btn-sm w-100">
+                                        View Team Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <h3 class="text-muted">No teams available</h3>
+                    <p>Check back later for team information.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('team-search');
+    const activeOnlyCheckbox = document.getElementById('active-only');
+    const teamCards = document.querySelectorAll('.team-card');
+    const teamCount = document.getElementById('team-count');
+    
+    function filterTeams() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const showActiveOnly = activeOnlyCheckbox.checked;
+        let visibleCount = 0;
+        
+        teamCards.forEach(card => {
+            const teamName = card.dataset.teamName;
+            const isActive = card.dataset.active === 'true';
+            
+            const matchesSearch = teamName.includes(searchTerm);
+            const matchesActiveFilter = !showActiveOnly || isActive;
+            
+            if (matchesSearch && matchesActiveFilter) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        teamCount.textContent = `${visibleCount} teams`;
+    }
+    
+    searchInput.addEventListener('input', filterTeams);
+    activeOnlyCheckbox.addEventListener('change', filterTeams);
+    
+    // Initial filter to hide inactive teams by default
+    filterTeams();
+});
+</script>
+{% endblock %}
