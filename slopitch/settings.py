@@ -150,3 +150,9 @@ TINYMCE_DEFAULT_CONFIG = {
     'valid_elements': '*[*]',
     'custom_undo_redo_levels': 10,
 }
+
+# Import local settings if they exist
+try:
+    from .settings_local import *
+except ImportError:
+    pass
