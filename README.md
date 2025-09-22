@@ -1,6 +1,6 @@
-# Thames-Ford Slo-Pitch League
+# Thamesford Slo-Pitch League
 
-A Django-based website for managing the Thames-Ford Slo-Pitch League. This application provides comprehensive league management tools including team roster management, game scheduling, standings calculation with official Slo-Pitch Ontario (SPO) tie-breaking rules, photo galleries, and news updates.
+A Django-based website for managing the Thamesford Slo-Pitch League. This application provides comprehensive league management tools including team roster management, game scheduling, standings calculation with official Slo-Pitch Ontario (SPO) tie-breaking rules, photo galleries, and news updates.
 
 ## Features
 
