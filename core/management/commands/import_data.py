@@ -15,6 +15,16 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('sql_file', type=str, help='Path to the PostgreSQL dump file')
 
+    def parse_datetime(self, dt_string):
+        """Parse datetime string handling various timezone formats"""
+        if not dt_string:
+            return None
+        # Handle various timezone formats
+        dt_string = dt_string.replace('Z', '+00:00')
+        if dt_string.endswith('+00'):
+            dt_string = dt_string.replace('+00', '+00:00')
+        return datetime.fromisoformat(dt_string)
+
     def handle(self, *args, **options):
         sql_file = options['sql_file']
         
@@ -90,8 +100,8 @@ class Command(BaseCommand):
                 is_superuser = is_superuser == 't'
                 
                 # Parse dates
-                date_joined = datetime.fromisoformat(date_joined.replace('Z', '+00:00')) if date_joined else timezone.now()
-                last_login = datetime.fromisoformat(last_login.replace('Z', '+00:00')) if last_login else None
+                date_joined = self.parse_datetime(date_joined) or timezone.now()
+                last_login = self.parse_datetime(last_login)
                 
                 user, created = User.objects.get_or_create(
                     id=int(user_id),
@@ -132,7 +142,7 @@ class Command(BaseCommand):
         for row in rows:
             try:
                 season_id, starts, title = row
-                starts_date = datetime.fromisoformat(starts).date() if starts else timezone.now().date()
+                starts_date = self.parse_datetime(starts).date() if starts else timezone.now().date()
                 
                 season, created = Season.objects.get_or_create(
                     id=int(season_id),
@@ -203,7 +213,7 @@ class Command(BaseCommand):
                 home_team = Team.objects.get(id=int(home_team_id))
                 away_team = Team.objects.get(id=int(away_team_id))
                 
-                starts_at = datetime.fromisoformat(starts_at.replace('Z', '+00:00')) if starts_at else timezone.now()
+                starts_at = self.parse_datetime(starts_at) or timezone.now()
                 home_score = int(home_score) if home_score else None
                 away_score = int(away_score) if away_score else None
                 cancellation = int(cancellation) if cancellation else None
@@ -250,7 +260,7 @@ class Command(BaseCommand):
                 photo_id, title, description, image, uploaded_at, category_id = row
                 
                 category = Category.objects.get(id=int(category_id))
-                uploaded_at = datetime.fromisoformat(uploaded_at.replace('Z', '+00:00')) if uploaded_at else timezone.now()
+                uploaded_at = self.parse_datetime(uploaded_at) or timezone.now()
                 
                 photo, created = Photo.objects.get_or_create(
                     id=int(photo_id),
@@ -273,7 +283,7 @@ class Command(BaseCommand):
             try:
                 news_id, posted_on, subject, body = row
                 
-                posted_on = datetime.fromisoformat(posted_on.replace('Z', '+00:00')) if posted_on else timezone.now()
+                posted_on = self.parse_datetime(posted_on) or timezone.now()
                 
                 news, created = News.objects.get_or_create(
                     id=int(news_id),
