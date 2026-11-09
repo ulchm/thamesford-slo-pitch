@@ -157,3 +157,8 @@ try:
     from .settings_local import *
 except ImportError:
     pass
+
+# Accept legacy sha1 passwords from the original site (upgraded to PBKDF2 on next login).
+# See core/hashers.py; remove once no sha1 hashes remain.
+from django.conf.global_settings import PASSWORD_HASHERS as _DEFAULT_PASSWORD_HASHERS
+PASSWORD_HASHERS = [*_DEFAULT_PASSWORD_HASHERS, "core.hashers.LegacySHA1PasswordHasher"]
